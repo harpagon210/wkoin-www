@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+  <title>WKOIN</title>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="jumbotron">
+      <h1 class="display-4">WKOIN</h1>
+      <p class="lead">Easily withdraw WKOIN and deposit KOIN.</p>
+      <hr class="my-4">
+      <p>WKOIN is an Hive-Engine token</p>
+      <p class="lead">
+        <a class="btn btn-primary btn-lg" href="https://peakd.com/@koin.app" role="button">Learn more</a>
+      </p>
+    </div>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">@</span>
+      </div>
+      <input type="text" class="form-control" placeholder="Hive account" aria-label="Hive account"
+        aria-describedby="basic-addon1" id="account-name">
+      <div class="input-group-append">
+        <button class="btn btn-outline-primary" type="button" id="get-account-button">Get Account Info</button>
+      </div>
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">WKOIN Balance</span>
+          </div>
+          <input type="text" class="form-control" placeholder="0.00000000" id="wkoin-balance">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Ethereum WITHDRAWAL address</span>
+          </div>
+          <input type="text" class="form-control" placeholder="The ethereum address you will be withdrawing KOIN to"
+            id="eth-withdrawal-addr">
+        </div>
+        <small class="form-text text-warning">When withdrawing WKOIN to KOIN a fee will have to be paid in HIVE to cover
+          the Ethereum network fees. 1 HIVE is added to the total to account for the delay to receive the transaction. There are no additional fees.</small>
+        <div>
+          <button class="btn btn-outline-primary" type="button" id="withdraw-wkoin-button">Withdraw</button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        To deposit KOIN you will have to first register an Ethereum address from where you will be sending the KOIN to
+        convert to WKOIN.
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Ethereum DEPOSIT address</span>
+          </div>
+          <input type="text" class="form-control" placeholder="The ethereum address you will be sending KOIN from"
+            id="eth-addr">
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="button" id="update-eth-addr">Update</button>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Amount of KOIN to deposit</span>
+          </div>
+          <input type="text" class="form-control" placeholder="0.00000000" id="deposit-amount">
+        </div>
+        <small class="form-text text-warning">When depositing KOIN a fee of 1% will be taken from the final amount of
+          WKOIN that you will receive.</small>
+          <small class="form-text text-warning">Deposits are processed after 35 block onfirmations.</small>
+          <small class="form-text text-warning">Min. fee: 0.00000001 KOIN</small>
+          <small class="form-text text-warning">Max. fee: 1000 KOIN</small>
+        <div>
+          <button class="btn btn-outline-primary" type="button" id="deposit-koin-button">Deposit</button>
+        </div>
+      </li>
+      <!-- withdrawal Modal -->
+      <div class="modal fade" id="withdrawalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">WKOIN withdrawal</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <span>To withdraw your <b><span id="token-amount"></span> WKOIN</b> you will have to send <b><span
+                    id="fee"></span> HIVE</b> to cover the
+                Ethereum
+                network fees.</span>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="submit-withdrawal">Withdraw</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ul>
+  </div>
+
+  <!-- Optional JavaScript; choose one of the two! -->
+
+  <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.0/web3.min.js"
+    integrity="sha512-ppuvbiAokEJLjOUQ24YmpP7tTaLRgzliuldPRZ01ul6MhRC+B8LzcVkXmUsDee7ne9chUfApa9/pWrIZ3rwTFQ=="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/8.0.2/bignumber.min.js"
+    integrity="sha512-7UzDjRNKHpQnkh1Wf1l6i/OPINS9P2DDzTwQNX79JxfbInCXGpgI1RPb3ZD+uTP3O5X7Ke4e0+cxt2TxV7n0qQ=="
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sscjs@latest/dist/ssc.min.js"
+    integrity="sha384-uEyetXEglC7bFjpbz8WicqWOe7YPWk1zhtrag0hyj/Hf57eNZuUPlti1eJLKrAd8"
+    crossorigin="anonymous"></script>
+
+  <script>
+    const SYMBOL = 'BEE';
+    const APP_ACCOUNT = 'koin.app';
+    const APP_ID = 'test-koin-app';
+    const ETH_DEPOSIT_ADDRESS = '0xA4697f32550f645D50B78e58830d7548f5d44aFC';
+    const ETH_CONTRACT_ADDR = '0xF6fF95D53E08c9660dC7820fD5A775484f77183A';
+    const API = 'https://wkoin.buzz';
+    const ssc = new SSC('https://api.hive-engine.com/rpc/');
+
+    const contractABI = [
+      // transfer
+      {
+        constant: false,
+        inputs: [
+          {
+            name: 'recipient',
+            type: 'address',
+          },
+          {
+            name: 'amount',
+            type: 'uint256',
+          },
+        ],
+        name: 'transfer',
+        outputs: [
+          {
+            name: '',
+            type: 'bool',
+          },
+        ],
+        type: 'function',
+      },
+    ];
+
+    let fee;
+    let web3;
+    const ethEnabled = () => {
+      if (window.ethereum) {
+        web3 = new Web3(window.ethereum);
+        window.ethereum.enable();
+        return true;
+      }
+      return false;
+    }
+
+    if (!ethEnabled()) {
+      alert("Please install an Ethereum-compatible browser or extension like MetaMask to use this App!");
+    }
+
+    $(document).ready(function () {
+      setTimeout(function () {
+        if (window.hive_keychain) {
+          window.hive_keychain.requestHandshake(function () {
+            console.log("Hive Keychain Handshake received!");
+          });
+        } else {
+          alert("Please install the hive keychain extension to use this App!");
+        }
+      }, 3000)
+
+      $("#get-account-button").click(function () {
+        const account = $("#account-name").val();
+        // get WKOIN balance
+        ssc.findOne(
+          'tokens',
+          'balances',
+          {
+            account,
+            symbol: SYMBOL,
+
+          }).then(function (res) {
+            if (!res) {
+              $("#wkoin-balance").val(0);
+            } else {
+              $("#wkoin-balance").val(res.balance);
+            }
+          })
+          .catch(function (error) {
+            // handle error
+            console.error(error);
+          })
+
+        // get ethereum address deposit
+        axios.get(`${API}/api/utils/ethaddress/${account}`)
+          .then(function (res) {
+            if (!res.data) {
+              $("#eth-addr").val('none');
+            } else {
+              $("#eth-addr").val(res.data.data.ethereumAddress);
+            }
+          })
+          .catch(function (error) {
+            $("#eth-addr").val('none');
+            // handle error
+            console.error(error);
+          })
+      });
+
+      $("#withdraw-wkoin-button").click(function () {
+        const withdrawalAddress = $("#eth-withdrawal-addr").val();
+        if (web3.utils.isAddress(withdrawalAddress)) {
+          // get ethereum address deposit
+          axios.get(`${API}/api/utils/withdrawalfee`)
+            .then(function (res) {
+              fee = res.data.data;
+              console.log('fee', fee)
+              const amount = $("#wkoin-balance").val();
+              $('#token-amount').text(amount);
+              $('#fee').text(fee);
+              $('#withdrawalModal').modal();
+            })
+            .catch(function (error) {
+              // handle error
+              console.error(error);
+            })
+        } else {
+          alert(`the withdrawal ethereum address entered is invalid (${withdrawalAddress})`);
+        }
+      });
+
+      $("#submit-withdrawal").click(function () {
+        const account = $("#account-name").val();
+        const amount = $("#wkoin-balance").val();
+        const withdrawalAddress = $("#eth-withdrawal-addr").val();
+        const memo = {
+          id: 'ssc-mainnet-hive',
+          json: {
+            contractName: 'tokens',
+            contractAction: 'transfer',
+            contractPayload: {
+              symbol: SYMBOL,
+              to: APP_ACCOUNT,
+              quantity: amount,
+              memo: withdrawalAddress
+            }
+          }
+        }
+        hive_keychain.requestTransfer(
+          account,
+          APP_ACCOUNT,
+          fee,
+          JSON.stringify(memo),
+          'HIVE',
+          function (response) {
+            console.log(response);
+            if (response.success === true) {
+              alert(`you will soon receive a transfer from ${APP_ACCOUNT} indicating if your WKOIN withdrawal was successfully processed or not`)
+            }
+          },
+        );
+      });
+
+      $("#update-eth-addr").click(function () {
+        const account = $("#account-name").val();
+        const ethAddress = $("#eth-addr").val();
+        if (web3.utils.isAddress(ethAddress)) {
+          // sign a message to prove that this account owns the eth address
+          web3.eth.personal.sign(web3.utils.fromUtf8(account), ethAddress)
+            .then(function (ethSig) {
+              console.log('eth sign', ethSig);
+              const memo = {
+                id: APP_ID,
+                json: {
+                  ethereumAddress: ethAddress,
+                  signature: ethSig,
+                },
+              }
+              hive_keychain.requestTransfer(
+                account,
+                APP_ACCOUNT,
+                '0.001',
+                JSON.stringify(memo),
+                'HIVE',
+                function (response) {
+                  console.log(response);
+                  if (response.success === true) {
+                    $("#eth-addr").val('');
+                    alert(`you will soon receive a transfer from ${APP_ACCOUNT} indicating if your ethereum address was successfully updated or not`);
+                  }
+                },
+              );
+            })
+            .catch(function (error) {
+              alert(error.message);
+            })
+        } else {
+          alert(`the deposit ethereum address entered is invalid (${ethAddress})`);
+        }
+      });
+
+      $("#deposit-koin-button").click(function () {
+        const ethAddress = $("#eth-addr").val();
+        const depositAmount = $("#deposit-amount").val();
+        let amount = new BigNumber(depositAmount).times(1e8);
+        amount = web3.utils.toHex(amount.toFixed());
+
+        if (ethAddress === null || ethAddress === '' || ethAddress === 'none') {
+          alert('you need to regiter a deposit address in order to deposit KOIN to your account')
+        } else {
+          const contractInstance = new web3.eth.Contract(contractABI, ETH_CONTRACT_ADDR);
+          var tx = {
+            from: ethAddress,
+            to: contractInstance._address,
+            data: contractInstance.methods.transfer(ETH_DEPOSIT_ADDRESS, amount).encodeABI(),
+            gas: 60000,
+          }
+          web3.eth.sendTransaction(tx).then(res => {
+            console.log(res)
+            alert(`you will soon receive a transfer from ${APP_ACCOUNT} indicating if your ethereum deposit  was successfully processed or not`)
+          }).catch(err => {
+            console.error(err)
+          });
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
