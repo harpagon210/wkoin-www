@@ -231,8 +231,11 @@
       });
 
       $("#withdraw-wkoin-button").click(function () {
+        const account = $("#account-name").val();
         const withdrawalAddress = $("#eth-withdrawal-addr").val();
-        if (web3.utils.isAddress(withdrawalAddress)) {
+        if (!account || account === '') {
+          alert('you must enter your Hive account');
+        } else if (web3.utils.isAddress(withdrawalAddress)) {
           // get ethereum address deposit
           axios.get(`${API}/api/utils/withdrawalfee`)
             .then(function (res) {
@@ -287,7 +290,10 @@
       $("#update-eth-addr").click(function () {
         const account = $("#account-name").val();
         const ethAddress = $("#eth-addr").val();
-        if (web3.utils.isAddress(ethAddress)) {
+
+        if (!account || account === '') {
+          alert('you must enter your Hive account');
+        } else if (web3.utils.isAddress(ethAddress)) {
           // sign a message to prove that this account owns the eth address
           web3.eth.personal.sign(web3.utils.fromUtf8(account), ethAddress)
             .then(function (ethSig) {
